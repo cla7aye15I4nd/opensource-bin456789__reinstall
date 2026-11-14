@@ -1934,7 +1934,7 @@ The current machine is $basearch, but it seems the ISO is for $iso_arch. Continu
     # shellcheck disable=SC2154
     setos_dd() {
         # raw 包含 vhd
-        test_url $img 'raw raw.gzip raw.xz raw.zstd raw.tar.gzip raw.tar.xz raw.tar.zstd' img_type
+        test_url $img 'raw raw.gzip raw.xz raw.zstd raw.tar.gzip raw.tar.xz raw.tar.zstd qemu' img_type
 
         if is_efi; then
             install_pkg hexdump
