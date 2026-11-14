@@ -1220,8 +1220,13 @@ unix2dos() {
 insert_into_file() {
     local file=$1
     local location=$2
-    local regex_to_find=$3
-    shift 3
+    if [ "$location" = head ]; then
+        # shift 3 会报错
+        shift 2
+    else
+        local regex_to_find=$3
+        shift 3
+    fi
 
     if ! [ -f "$file" ]; then
         error_and_exit "File not found: $file"
@@ -1233,9 +1238,12 @@ insert_into_file() {
     fi
 
     if [ "$location" = head ]; then
+        local bak
         bak=$(mktemp)
-        cp $file $bak
-        cat - $bak >$file
+        if ! { cp "$file" "$bak" && cat - "$bak" >"$file"; }; then
+            error_and_exit "Failed to insert into file: $file"
+        fi
+        rm -f "$bak"
     else
         line_num=$(grep "$@" -n "$regex_to_find" "$file" | cut -d: -f1)
 
